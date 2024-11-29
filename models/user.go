@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	ID        uint           `gorm:"primaryKey"`        // Primary Key
@@ -11,4 +15,6 @@ type User struct {
 	UpdatedAt int64          // Timestamp untuk pencatatan waktu update
 	DeletedAt gorm.DeletedAt // Jika di hapus otomatis soft Delete'
 	IsAdmin   bool
+	Token     string `gorm:"unique;"`
+	ExpiresAt time.Time
 }
