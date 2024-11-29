@@ -1,0 +1,115 @@
+body{
+    background-color: #363234;
+    font-family: 'Poppins';
+    scroll-behavior: smooth;
+}
+
+h1{
+    color: #F5C336;
+    font-family: 'Days One';
+    font-size: min(10vw, 90px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+}
+
+a{
+    text-decoration: none;
+}
+
+.logo{
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    margin-bottom: 10px;
+}
+
+.arrow-down{
+    max-width: 100% !important;
+    width: min(10vw, 76px);
+    flex-shrink: 0;
+    margin-top: min(10vw, 76px);
+}
+
+#navbar{
+    border-right: solid 2px black;
+}
+
+#home{
+    flex-direction: row!important;
+    display: flex !important;
+    justify-content: center;
+}
+
+#home-right{
+    flex-direction: column!important;
+    display: flex !important;
+    align-items: center !important;
+    
+}
+
+#home-navbar{
+    flex-direction: column;
+    display: flex;
+}
+
+#games{
+    flex-direction: column!important;
+    display: flex !important;
+    justify-content: center;
+    margin-top: 3vw;
+    gap: 8vw;
+}
+
+.img-border{
+    border: solid 5px #ffffff;
+    border-radius: 26px;
+}
+
+.img-game{
+    aspect-ratio: 1/1;
+    transition-duration: 0.5s;
+}
+
+footer p{
+    text-align: center;
+    font-style: italic;
+    font-size: min(15px, 3vw);
+}
+
+.img-game:hover{
+    box-shadow: 0px 0px 35px 3px rgba(3, 178, 148, 0.70);
+}
+
+.admn-color:hover {
+    box-shadow: 0px 0px 35px 3px #E53E8F !important;
+}
+
+#add-btn:hover {
+    box-shadow: 0px 0px 35px 3px #E53E8F;
+}
+
+.active-white-4 input[type=text]:focus:not([readonly]) {
+    border: 1px solid #ffffff;
+    box-shadow: 0px 0px 25px 4px rgba(3, 178, 148, 0.70);
+    background-color: #363234;
+    border-radius: 300px;
+    color: #ffffff;
+}
+
+.active-white-3 input[type=text] {
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 0 1px #ffffff;
+    background-color: #363234;
+    border-radius: 300px;
+    color: #ffffff;
+}
+
+::placeholder {
+    color: rgba(255, 255, 255, 0.41) !important;
+    opacity: 1; /* Firefox */
+  }
+  
+::-ms-input-placeholder { /* Edge 12 -18 */
+    color: rgba(255, 255, 255, 0.419)(255, 255, 255) !important;
+  }

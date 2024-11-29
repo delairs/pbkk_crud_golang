@@ -8,8 +8,15 @@ import (
 
 func InitRoute(app *gin.Engine) {
 	route := app
-	route.GET("/", controller.GetAllUser)
-	route.POST("/login", controller.Login)
-	route.POST("/register", controller.Register)
+	route.GET("/user", controller.GetAllUser)
+	route.POST("/loginAPI", controller.Login)
+	route.POST("/registerAPI", controller.Register)
 	route.DELETE("/logut", controller.GetAllUser)
+	route.GET("/login", controller.LoginPage())
+
+	route.GET("/", controller.IndexHome())
+	route.GET("/admin", controller.IndexAdmin())
+	route.GET("/register", controller.RegisterPage())
+	route.GET("/game", controller.GameDescPage())
+	route.GET("/addGame", controller.AddGamePage())
 }

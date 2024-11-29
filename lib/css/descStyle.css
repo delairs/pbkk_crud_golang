@@ -1,0 +1,39 @@
+body{
+    background-color: #363234;
+    font-family: 'Days One';
+}
+
+h1{
+    color: #F5C336;
+}
+
+#desc{
+    max-width: 100% !important;
+    font-family: Poppins;
+    color: #F5C336;
+}
+
+#desc > p{
+    font-size: min(1.25rem, 2.8vw);
+}
+
+#button{
+    font-family: 'Poppins';
+    font-weight: 700;
+    max-width: 200px;
+    background-color: #03B294;
+    color: white;
+    font-size: min(1.25rem, 2.8vw);
+}
+
+img{
+    border: 3px solid #ffffff;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+}
+
+#content{
+    display: flex;
+    flex-direction: column;
+}
+
