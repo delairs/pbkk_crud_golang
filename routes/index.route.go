@@ -11,5 +11,5 @@ func InitRoute(app *gin.Engine) {
 	route.GET("/", controller.GetAllUser)
 	route.POST("/login", controller.Login)
 	route.POST("/register", controller.Register)
-	route.DELETE("/logut", controller.GetAllUser)
+	route.GET("/logout", controller.GetAllUser)
 }

@@ -10,4 +10,5 @@ type User struct {
 	CreatedAt int64          // Timestamp untuk pencatatan waktu pembuatan
 	UpdatedAt int64          // Timestamp untuk pencatatan waktu update
 	DeletedAt gorm.DeletedAt // Jika di hapus otomatis soft Delete'
+	IsAdmin   bool
 }
