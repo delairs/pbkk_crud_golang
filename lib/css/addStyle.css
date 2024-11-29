@@ -1,0 +1,41 @@
+body{
+    background-color: #363234;
+    font-family: 'Days One';
+}
+
+#box{
+    flex-shrink: 0;
+    border-radius: 2.4375rem;
+    background: #1E1E1E;
+    box-shadow: 0px 0px 54.2px -3px rgba(245, 195, 54, 0.46);
+}
+
+h1{
+    color: #F5C336;
+}
+
+#formFile{
+   color: #f5c23683 !important;
+}
+
+#input{
+    font-family: 'Poppins';
+}
+
+#button{
+  background-color: #E53E8F;
+  color: white;
+}
+
+::placeholder {
+    color: #f5c2366a !important;
+    opacity: 1; /* Firefox */
+  }
+  
+  ::-ms-input-placeholder { /* Edge 12 -18 */
+    color:#ffffff !important;
+  }
+
+  #inputFile::-webkit-file-upload-button {
+    visibility: hidden;
+  }

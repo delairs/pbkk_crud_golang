@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="lib/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/indexStyle.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit&family=Poppins&family=REM&family=Rasa&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Days+One&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#searchbar").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#game-grid > div > .searchable").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <title>Arcade Tamaka | Admin</title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navbar">
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto px-0 bg-dark" id="navbar">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-0 pt-2 text-white min-vh-100 sticky-top">
+                    <a href="/admin" class="d-flex align-items-center px-2 px-md-3 px-lg-4 pt-cstm mb-md-0 text-white text-decoration-none">
+                        <i class="fs-1 bi-person-circle"></i> <span class="fs-5 ps-2 ms-2 d-none d-sm-inline">Admin</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column pt-cstm mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="#home-navbar" class="nav-link align-middle py-1 px-2 px-md-3 ps-lg-4 pe-sm-4 text-white">
+                                <i class="fs-1 bi-house"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#games" class="nav-link py-1 px-2 px-md-3 ps-lg-4 pe-sm-3 align-middle text-white">
+                                <i class="fs-1 bi-controller"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Games</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/addGame" class="nav-link py-1 px-2 px-md-3 ps-lg-4 pe-sm-3 align-middle text-white">
+                                <i class="fs-1 bi-plus-circle"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Add Game</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/login" class="nav-link py-1 px-2 px-md-3 ps-lg-4 pe-sm-3 align-middle text-white">
+                                <i class="fs-1 bi-box-arrow-right"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                </div>
+            </div>
+
+            <div class="col py-3 container-fluid">
+                <!-- SEARCH BAR -->
+                <div class="active-white-3 active-white-4 pb-4 pt-4 px-3 sticky-top">
+                    <input class="form-control" id="searchbar" type="text" placeholder="What do you want to play?" aria-label="What do you want to play?">
+                </div>
+
+                <section id="home">
+                    <div id="home-navbar">
+                        <!-- BIG LOGO -->
+                        <div id="home-right">
+                            <img src="asset/Logo.png" class="logo img-fluid">
+                            <img src="asset/CaretDoubleDown.png" class="arrow-down img-fluid">
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="games">
+                    <!-- GAMES HEADLINE -->
+                    <div class="game-head">
+                        <h1>Games</h1>
+                    </div>
+
+                    <!-- GRID SYSTEM -->
+                    <div id="game-grid" class="container">
+                        <div class="row justify-content-center">
+                            <!-- TEMPLATE CONTENT -->
+                            <div class="col-12 col-sm-6 col-md-4 searchable">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a>
+                                        <img src="asset/metal.png" class="admn-color img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">Metal game</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-4 searchable">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a>
+                                        <img src="asset/PDM_SCH_FINAL.png" class="admn-color img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">PDM game</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-4 searchable">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a>
+                                        <img src="asset/Logo.png" class="admn-color img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">Arcade game</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-4 searchable">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a>
+                                        <img src="asset/Logo.png" class="admn-color img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">Arcade game</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-md-4 searchable">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a>
+                                        <img src="asset/Logo.png" class="admn-color img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">Arcade game</p>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- ADD GAME BUTTON -->
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
+                                    <a href="/addGame">
+                                        <img id="add-btn" src="asset/Plus.png" class="img-fluid img-game img-border">
+                                        <p class="text-white text-center mt-2">Add Game</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FOOTER -->
+                <footer class="mt-cstm">
+
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!--javascript-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="lib/js/bootstrap.bundle.js"></script>
+    
+</body>
+</html>

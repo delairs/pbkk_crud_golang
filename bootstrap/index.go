@@ -21,6 +21,16 @@ func BootstrapApp() {
 	database.ConnectDatabase()
 	app := gin.Default()
 
+	app.Static("../lib", "./lib")
+	app.Static("../asset", "./asset")
+
+	app.Use(func(c *gin.Context) {
+		c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+		c.Header("Pragma", "no-cache")
+		c.Header("Expires", "0")
+		c.Next()
+	})
+
 	routes.InitRoute(app)
 
 	app.Use(middleware.CORSMiddleware())

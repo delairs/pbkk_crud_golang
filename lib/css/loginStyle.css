@@ -1,0 +1,56 @@
+body{
+    background-color: #363234;
+    font-family: 'Days One';
+}
+
+#box{
+    width: 22rem;
+    height: 31rem;
+    max-width: calc(100% - 20px) !important;
+    flex-shrink: 0;
+    background-color: #1E1E1E;
+    border-radius: 2rem;
+    box-shadow: 0px 0px 54.2px -3px rgba(245, 195, 54, 0.46);
+    margin: 0 auto !important;
+    padding: 0 10px !important;
+}
+
+#title{
+    max-width: calc(100% - 20px) !important;
+    flex-shrink: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 10px !important;
+
+}
+
+#userPass{
+    font-family: 'Poppins';
+}
+
+h1{
+    color: #F5C336;
+    text-align: center;
+}
+
+i{
+    align-self: flex-start !important;
+    color: white !important;
+}
+
+#button{
+    font-family: 'Poppins';
+    font-weight: 700;
+    width: 10.1875rem;
+    height: 2.9rem;
+    background-color: #03B294;
+    color: white;
+}
+
+::placeholder {
+    color: #f5c2366a !important;
+    opacity: 1; /* Firefox */
+  }
+  
+  ::-ms-input-placeholder { /* Edge 12 -18 */
+    color:#ffffff !important;
+  }
