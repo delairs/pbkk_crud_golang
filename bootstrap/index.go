@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"crud-go/database"
+	"crud-go/middleware"
 	"crud-go/routes"
 	"log"
 	"os"
@@ -31,6 +32,8 @@ func BootstrapApp() {
 	})
 
 	routes.InitRoute(app)
+
+	app.Use(middleware.CORSMiddleware())
 
 	log.Printf("Server running on port %s\n", port)
 	if err := app.Run(port); err != nil {
