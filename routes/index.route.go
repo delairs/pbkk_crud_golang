@@ -11,10 +11,8 @@ var DB *gorm.DB
 
 func InitRoute(app *gin.Engine) {
 	route := app
-	route.GET("/user", controller.GetAllUser)
 	route.POST("/loginAPI", controller.Login)
 	route.POST("/registerAPI", controller.Register)
-	route.DELETE("/logut", controller.GetAllUser)
 	route.GET("/login", controller.LoginPage())
 	route.GET("/admin", controller.IndexAdmin())
 	route.GET("/register", controller.RegisterPage())
@@ -26,5 +24,5 @@ func InitRoute(app *gin.Engine) {
 	authorized := route.Group("/", controller.AuthMiddleware(DB))
 	authorized.POST("/logout", controller.Logout)
 	authorized.GET("/me", controller.GetUserProfile)
-  authorized.GET("/home", controller.IndexHome())
+	authorized.GET("/home", controller.IndexHome())
 }

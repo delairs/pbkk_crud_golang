@@ -44,6 +44,7 @@ func Register(c *gin.Context) {
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: hashedPassword,
+		Token:    "",
 	}
 	if err := database.DB.Create(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})
