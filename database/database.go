@@ -44,6 +44,16 @@ func ConnectDatabase() {
 	if err != nil {
 		log.Fatalf("Error running migrations: %v", err)
 	}
+	// Jalankan migrasi otomatis dengan model Game
+	err = DB.AutoMigrate(&models.Game{})
+	if err != nil {
+		log.Fatalf("Error running migrations: %v", err)
+	}
+	// Jalankan migrasi otomatis dengan model History
+	err = DB.AutoMigrate(&models.History{})
+	if err != nil {
+		log.Fatalf("Error running migrations: %v", err)
+	}
 
 	log.Println("Database migrated successfully!")
 }

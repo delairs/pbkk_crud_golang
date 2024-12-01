@@ -24,5 +24,11 @@ func InitRoute(app *gin.Engine) {
 	authorized := route.Group("/", controller.AuthMiddleware(DB))
 	authorized.POST("/logout", controller.Logout)
 	authorized.GET("/me", controller.GetUserProfile)
+	authorized.POST("/addGameAPI", controller.AddGame)
+	// authorized.DELETE("/deleteGame", controller.GetUserProfile)
+	authorized.PUT("/editProfile", controller.EditProfile)
+	authorized.DELETE("/deleteGame/:game_id", controller.DeleteGame)
+	authorized.POST("/addHistory/:game_id", controller.AddHistory)
+	authorized.GET("/getHistory", controller.GetHistory)
 	authorized.GET("/home", controller.IndexHome())
 }
