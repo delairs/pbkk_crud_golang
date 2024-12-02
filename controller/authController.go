@@ -5,7 +5,6 @@ import (
 	"crud-go/helpers"
 	"crud-go/models"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -44,10 +43,10 @@ func Register(c *gin.Context) {
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: hashedPassword,
-		Token:    "",
+		Token:    nil,
 	}
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register user", "details": err.Error()})
 		return
 	}
 
@@ -81,43 +80,44 @@ func Login(c *gin.Context) {
 	}
 
 	// Buat token JWT
-	token, err := helpers.GenerateJWT(user.ID)
+	token, err := helpers.GenerateJWT(user.ID, user.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
 
 	// Simpan token di database jika login berhasil
-	user.Token = token
+	user.Token = &token
 	// Tidak perlu mengatur ExpiresAt di sini, karena sudah ada di klaim JWT
 	if err := database.DB.Save(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save token"})
 		return
 	}
 
+	c.SetCookie(
+		"Authorization",  // Cookie name
+		token,            // Cookie value (the JWT)
+		86400,            // MaxAge in seconds (e.g., 86400 = 24 hour)
+		"/",              // Path
+		"localhost:3002", // Domain (replace with your actual domain)
+		false,            // Secure (send cookie over HTTPS only)
+		true,             // HttpOnly (JavaScript can't access the cookie)
+	)
+
 	// Return token ke client
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
 		"token":   token,
+		"isAdmin": user.IsAdmin,
 	})
 }
 
 // Logout handler
 func Logout(c *gin.Context) {
-	// Ambil token dari header Authorization
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
+	// Set user ID dari context gin
+	userID, exists := c.Get("user_id")
+	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
-	// Hapus prefix "Bearer "
-	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-
-	// Validasi token
-	userID, err := helpers.ParseJWT(tokenString)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		return
 	}
 
@@ -129,11 +129,21 @@ func Logout(c *gin.Context) {
 	}
 
 	// Set token menjadi kosong (atau bisa menambahkan ke blacklist jika perlu)
-	user.Token = "" // atau bisa simpan token ke blacklist jika mau
+	user.Token = nil // atau bisa simpan token ke blacklist jika mau
 	if err := database.DB.Save(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user token"})
 		return
 	}
+
+	c.SetCookie(
+		"Authorization",  // Cookie name
+		"",               // Empty value
+		-1,               // MaxAge set to -1 to expire immediately
+		"/",              // Path
+		"localhost:3002", // Domain
+		false,            // Secure (true for HTTPS only)
+		true,             // HttpOnly
+	)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
@@ -141,17 +151,15 @@ func Logout(c *gin.Context) {
 // AuthMiddleware
 func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.GetHeader("Authorization")
-		if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
+		tokenString, err := c.Cookie("Authorization")
+		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
 
-		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-
 		// Validasi JWT
-		userID, err := helpers.ParseJWT(tokenString)
+		userID, isAdmin, err := helpers.ParseJWT(tokenString)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			c.Abort()
@@ -161,6 +169,7 @@ func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
 		// Cek apakah token sudah kadaluarsa berdasarkan klaim exp
 		// Token sudah memuat informasi ini melalui klaim, jadi tidak perlu lagi cek token di DB
 		c.Set("user_id", userID)
+		c.Set("is_admin", isAdmin)
 		c.Next()
 	}
 }

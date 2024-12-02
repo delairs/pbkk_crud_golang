@@ -45,9 +45,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="login" class="nav-link py-1 px-2 px-md-2 ps-lg-3 pe-sm-4 align-middle text-white">
-                                <i class="fs-1 bi-box-arrow-in-right"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Login</span>
-                            </a>
+                            <button id="logout" class="nav-link py-1 px-2 px-md-3 ps-lg-4 pe-sm-3 align-middle text-white">
+                                <i class="fs-1 bi-box-arrow-right"></i> <span class="fs-5 ps-2 ms-1 d-none d-sm-inline">Logout</span>
+                            </button>
                         </li>
                     </ul>
                     <hr>
@@ -139,5 +139,37 @@
     <!--javascript-->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.bundle.js"></script>
+
+    <!-- Logout Script -->
+    <script>
+        document.getElementById('logout').addEventListener('click', () => {
+            // API endpoint (adjust to match your Gin server's address)
+            const apiEndpoint = "http://localhost:3002/logout";
+    
+            // Send the data using fetch
+            fetch(apiEndpoint, {
+                method: 'POST', // HTTP POST request
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(result => {
+                // Handle the success response
+                console.log("Success:", result);
+                window.location.href = "/login";
+            })
+            .catch(error => {
+                // Handle errors
+                console.error("Error:", error);
+                alert("Failed to logout. Please try again.");
+            });
+        });
+    </script>
 </body>
 </html>

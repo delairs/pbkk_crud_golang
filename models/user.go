@@ -12,6 +12,6 @@ type User struct {
 	CreatedAt int64  // Timestamp untuk pencatatan waktu pembuatan
 	UpdatedAt int64  // Timestamp untuk pencatatan waktu update
 	IsAdmin   bool
-	Token     string `gorm:"unique;"`
+	Token     *string `gorm:"unique;"`
 	ExpiresAt time.Time
 }

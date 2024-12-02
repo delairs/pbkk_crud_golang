@@ -18,7 +18,7 @@ func init() {
 }
 
 // GenerateJWT membuat token JWT
-func GenerateJWT(userID uint) (string, error) {
+func GenerateJWT(userID uint, isAdmin bool) (string, error) {
 	secretKey := os.Getenv("SECRET_KEY")
 	log.Printf("Secret Key: %s", secretKey)
 	// Validasi apakah secret key sudah diatur
@@ -28,8 +28,9 @@ func GenerateJWT(userID uint) (string, error) {
 
 	// Membuat klaim untuk token
 	claims := jwt.MapClaims{
-		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // Token berlaku 24 jam
+		"user_id":  userID,
+		"is_admin": isAdmin,
+		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Token berlaku 24 jam
 	}
 
 	// Membuat token dengan klaim dan metode tanda tangan
@@ -40,7 +41,7 @@ func GenerateJWT(userID uint) (string, error) {
 }
 
 // Parse dan validasi token
-func ParseJWT(tokenString string) (uint, error) {
+func ParseJWT(tokenString string) (uint, bool, error) {
 	secretKey := os.Getenv("SECRET_KEY")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Verifikasi metode tanda tangan yang digunakan
@@ -52,17 +53,23 @@ func ParseJWT(tokenString string) (uint, error) {
 	})
 
 	if err != nil {
-		return 0, err
+		return 0, false, err
 	}
 
 	// Mengecek klaim dan validitas token
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		userID, ok := claims["user_id"].(float64)
 		if !ok {
-			return 0, errors.New("invalid claims")
+			return 0, false, errors.New("invalid claims")
 		}
-		return uint(userID), nil
+
+		isAdmin, ok := claims["is_admin"].(bool)
+		if !ok {
+			return 0, false, errors.New("invalid claims")
+		}
+
+		return uint(userID), bool(isAdmin), nil
 	}
 
-	return 0, errors.New("invalid token")
+	return 0, false, errors.New("invalid token")
 }

@@ -14,10 +14,7 @@ func InitRoute(app *gin.Engine) {
 	route.POST("/loginAPI", controller.Login)
 	route.POST("/registerAPI", controller.Register)
 	route.GET("/login", controller.LoginPage())
-	route.GET("/admin", controller.IndexAdmin())
 	route.GET("/register", controller.RegisterPage())
-	route.GET("/game", controller.GameDescPage())
-	route.GET("/addGame", controller.AddGamePage())
 
 	// Route dengan autentikasi (protected)
 	// Tambahkan middleware auth untuk memproteksi route ini
@@ -31,4 +28,7 @@ func InitRoute(app *gin.Engine) {
 	authorized.POST("/addHistory/:game_id", controller.AddHistory)
 	authorized.GET("/getHistory", controller.GetHistory)
 	authorized.GET("/home", controller.IndexHome())
+	authorized.GET("/game", controller.GameDescPage())
+	authorized.GET("/admin", controller.IndexAdmin())
+	authorized.GET("/addGame", controller.AddGamePage())
 }

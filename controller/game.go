@@ -10,17 +10,18 @@ import (
 
 func AddGame(c *gin.Context) {
 
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token required"})
-		c.Abort()
-		return
-	}
-
 	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User didn't exists"})
+		return
+	}
+
+	// Cek apakah memiliki privilege admin
+	isAdmin, exists := c.Get("is_admin")
+
+	if !exists || isAdmin == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized not admin"})
 		return
 	}
 
@@ -68,6 +69,21 @@ func AddGame(c *gin.Context) {
 }
 
 func DeleteGame(c *gin.Context) {
+	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
+	userID, exists := c.Get("user_id")
+	if !exists || userID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User didn't exists"})
+		return
+	}
+
+	// Cek apakah memiliki privilege admin
+	isAdmin, exists := c.Get("is_admin")
+
+	if !exists || isAdmin == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized not admin"})
+		return
+	}
+
 	// Ambil game_id dari parameter URL
 	gameID := c.Param("game_id")
 	// Validasi game_id (opsional)
