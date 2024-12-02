@@ -27,6 +27,8 @@ func InitRoute(app *gin.Engine) {
 	authorized.DELETE("/deleteGame/:game_id", controller.DeleteGame)
 	authorized.POST("/addHistory/:game_id", controller.AddHistory)
 	authorized.GET("/getHistory", controller.GetHistory)
+	authorized.GET("/getGames", controller.GetAllGames)
+	authorized.GET("/getGameByID/:game_id", controller.GetGameByID)
 	authorized.GET("/home", controller.IndexHome())
 	authorized.GET("/game", controller.GameDescPage())
 	authorized.GET("/admin", controller.IndexAdmin())

@@ -107,3 +107,53 @@ func DeleteGame(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Game deleted successfully"})
 }
+
+func GetAllGames(c *gin.Context) {
+	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
+	userID, exists := c.Get("user_id")
+	if !exists || userID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User didn't exists"})
+		return
+	}
+
+	// Retrieve all games from the database
+	var games []models.Game
+	if err := database.DB.Find(&games).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve games"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Games retrieved successfully",
+		"game":    games,
+	})
+}
+
+func GetGameByID(c *gin.Context) {
+	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
+	userID, exists := c.Get("user_id")
+	if !exists || userID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User didn't exists"})
+		return
+	}
+
+	// Ambil game_id dari parameter URL
+	gameID := c.Param("game_id")
+	// Validasi game_id (opsional)
+	if gameID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Game ID is required"})
+		return
+	}
+
+	// Cari game berdasarkan gameID
+	var game models.Game
+	if err := database.DB.First(&game, "game_id = ?", gameID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Game not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Games retrieved successfully",
+		"game":    game,
+	})
+}
