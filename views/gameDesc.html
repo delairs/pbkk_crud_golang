@@ -13,7 +13,7 @@
 </head>
 <body class="mt-3 pt-2">
     <div class="row mb-3 mb-sm-0 ps-3 ps-sm-0 container-fluid">
-        <a href="/home" class="col-2 col-lg-1 text-center">
+        <a id="backButton" href="" class="col-2 col-lg-1 text-center">
             <i class="bi bi-arrow-left-circle text-white" style="font-size: 50px"></i>
         </a>
     </div>
@@ -69,7 +69,43 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
 
-    <!-- Data displayer -->
+    <!-- Back Button Script -->
+    <script>
+        const backButton = document.getElementById("backButton");
+        const userApiEndpoint = `http://localhost:3002/me`;
+
+        fetch(userApiEndpoint, {
+            method: 'GET', // HTTP GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(result => {
+            // Handle the success response
+            console.log("Success:", result);
+            
+            // Conditional href for admin and user
+            if(result.is_admin == false){
+                backButton.setAttribute("href", "/home");
+            }
+            else{
+                backButton.setAttribute("href", "/admin");
+            }
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error:", error);
+            alert("Failed to load back button. Please Refresh.");
+        });
+    </script>
+
+    <!-- Data Displayer -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameID = urlParams.get('gameID');
