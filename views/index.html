@@ -31,7 +31,7 @@
             <div class="col-auto px-0 bg-dark" id="navbar">
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-0 pt-2 text-white min-vh-100 sticky-top">
                     <a href="/" class="d-flex align-items-center px-2 px-md-3 px-lg-4 pt-cstm mb-md-0 text-white text-decoration-none">
-                        <i class="fs-1 bi-person-circle"></i> <span class="fs-5 ps-2 ms-2 d-none d-sm-inline">Guest</span>
+                        <i class="fs-1 bi-person-circle"></i> <span id="username" class="fs-5 ps-2 ms-2 d-none d-sm-inline"></span>
                     </a>
                     <ul class="nav nav-pills flex-column pt-cstm mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                         <li class="nav-item">
@@ -79,15 +79,7 @@
                     <!-- GRID SYSTEM -->
                     <div id="game-grid" class="container">
                         <div id="gameContainer" class="row justify-content-center">
-                            <!-- TEMPLATE CONTENT -->
-                            <div class="col-12 col-sm-6 col-md-4">
-                                <div class="container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5">
-                                    <a href="/game">
-                                        <img src="asset/metal.png" class="img-fluid img-game img-border">
-                                        <p class="text-white text-center mt-2">Metal game</p>
-                                    </a>
-                                </div>
-                            </div>
+                            <!-- CONTENT GENERATED THROUGH SCRIPT -->
                         </div>
                     </div>
                 </section>
@@ -104,7 +96,98 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.bundle.js"></script>
 
+    <!-- User Data Script -->
+    <script>
+        const userApiEndpoint = "http://localhost:3002/me";
+        const username = document.getElementById("username");
+
+        fetch(userApiEndpoint, {
+            method: 'GET', // HTTP GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(result => {
+            // Handle the success response
+            console.log("Success:", result);
+            username.innerText = result.name;
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error:", error);
+            alert("Failed to user datas. Please Refresh.");
+        });
+    </script>
+
     <!-- Generate Games Script -->
+    <script>
+        const apiEndpoint = "http://localhost:3002/getGames";
+        const gameContainer = document.getElementById("gameContainer");
+
+        // Send the games data using fetch
+        fetch(apiEndpoint, {
+            method: 'GET', // HTTP GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(result => {
+            // Handle the success response
+            console.log("Success:", result);
+            ShowGames(result);
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error:", error);
+            alert("Failed to load games. Please Refresh.");
+        });
+
+        // Loop through the JSON data
+        function ShowGames(result){
+            result.games.forEach(game => {
+                // Create the outermost div
+                const colDiv = document.createElement("div");
+                colDiv.className = "col-12 col-sm-6 col-md-4";
+    
+                // Create the container div
+                const containerDiv = document.createElement("div");
+                containerDiv.className = "container px-5 py-5 px-sm-3 py-sm-3 px-lg-5 py-lg-5";
+    
+                // Create the anchor tag
+                const link = document.createElement("a");
+                link.href = `/game?gameID=${game.Game_ID}`;
+    
+                // Create the image
+                const image = document.createElement("img");
+                image.src = `asset/${game.Path_Image}`;
+                image.className = "img-fluid img-game img-border";
+    
+                // Create the title paragraph
+                const title = document.createElement("p");
+                title.className = "text-white text-center mt-2";
+                title.innerText = game.Game_Title;
+    
+                // Assemble the elements
+                link.appendChild(image);
+                link.appendChild(title);
+                containerDiv.appendChild(link);
+                colDiv.appendChild(containerDiv);
+                gameContainer.appendChild(colDiv);
+            });
+        }
+    </script>
 
     <!-- Logout Script -->
     <script>

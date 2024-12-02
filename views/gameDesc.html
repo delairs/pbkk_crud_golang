@@ -25,12 +25,13 @@
 
             <div id="leftSide" class="container-fluid px-0 col-4">
                 <div id="title" class="">
-                    <h1 class="display-3 mb-2 mb-lg-4 pb-lg-4">Game Title</h1>
+                    <!-- Title in script -->
+                    <h1 id="gameTitle" class="display-3 mb-2 mb-lg-4 pb-lg-4"></h1>
                 </div>
         
                 <div id="desc" class="container-fluid px-0">
-                    <p class="lead mb-4 pb-4 ">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p> 
+                    <!-- Desc in script -->
+                    <p id="gameDesc" class="lead mb-4 pb-4 "></p> 
                 </div>
 
                 <div class="row mx-0">
@@ -41,7 +42,7 @@
             <div class="col-2"></div>
 
             <div id="rightSide" class=" container-fluid px-0 col-4">
-                <img src="asset/Logo.png" class="img-fluid">
+                <img src="" id="gameImage" class="img-fluid">
             </div>
 
             <div class="col-1">
@@ -56,7 +57,7 @@
                   <button type="button" class="btn-close" style="filter: var(--bs-btn-close-white-filter);" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <iframe src="https://playsaurus.com/kongPokerQuest63/" title="Game" scrolling="no" allow="autoplay; payment; fullscreen; microphone; clipboard-read; focus-without-user-activation *; screen-wake-lock; gamepad; clipboard-write 'self' https://playsaurus.com/kongPokerQuest56/" webkitallowfullscreen="true" mozallowfullscreen="true" msallowfullscreen="true" allowfullscreen="true" allowfullscreen loading="eager" style="border: 0px; background-color: rgb(255, 255, 255); width: 100%; height: 45vw; min-width: 100%; min-height: 100%;">
+                    <iframe id="gameLink" src="" title="Game" scrolling="no" allow="autoplay; payment; fullscreen; microphone; clipboard-read; focus-without-user-activation *; screen-wake-lock; gamepad" webkitallowfullscreen="true" mozallowfullscreen="true" msallowfullscreen="true" allowfullscreen="true" allowfullscreen loading="eager" style="border: 0px; background-color: rgb(255, 255, 255); width: 100%; height: 45vw; min-width: 100%; min-height: 100%;">
                     </iframe>
                 </div>
               </div>
@@ -64,9 +65,51 @@
           </div>
     </div>
 
-    <!--javascript-->
+    <!-- javascript -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
+
+    <!-- Data displayer -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameID = urlParams.get('gameID');
+        const apiEndpoint = `http://localhost:3002/getGameByID/${gameID}`;
+        const title = document.getElementById("gameTitle");
+        const desc  = document.getElementById("gameDesc");
+        const image = document.getElementById("gameImage");
+        const link  = document.getElementById("gameLink");
+
+        // Send the data using fetch
+        fetch(apiEndpoint, {
+            method: 'GET', // HTTP GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(result => {
+            // Handle the success response
+            console.log("Success:", result);
+            DisplayGame(result);
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error:", error);
+            alert("Failed to load game. Please Refresh.");
+        });
+        
+        function DisplayGame(result){
+            title.innerText = result.game.Game_Title;
+            desc.innerText = result.game.Description;
+            image.setAttribute("src",`asset/${result.game.Path_Image}`);
+            link.setAttribute("src", result.game.Link_Embed);
+        }
+    </script>
 </body>
 </html>
 

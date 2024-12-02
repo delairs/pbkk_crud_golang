@@ -125,7 +125,7 @@ func GetAllGames(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Games retrieved successfully",
-		"game":    games,
+		"games":   games,
 	})
 }
 
