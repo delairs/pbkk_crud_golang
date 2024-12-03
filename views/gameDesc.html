@@ -34,8 +34,9 @@
                     <p id="gameDesc" class="lead mb-4 pb-4 "></p> 
                 </div>
 
-                <div class="row mx-0">
-                    <button id="button" type="button" class="btn btn-lg col" data-bs-toggle="modal" data-bs-target="#gameScreen">Play Game</button>            
+                <div class="row mx-0 g-1">
+                    <button id="button" type="button" class="btn btn-lg col" data-bs-toggle="modal" data-bs-target="#gameScreen">Play Game</button>
+                    <button id="delbutton" type="button" class="ml-1 btn btn-lg col" style="display: none;">Delete</button>           
                 </div>
             </div>
             
@@ -68,6 +69,73 @@
     <!-- javascript -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
+
+    <!-- Delete Button Script -->
+    <script>
+        document.getElementById("delbutton").addEventListener('click', () => {
+            const delID     = urlParams.get('gameID');
+            deleteApiEndpoint = `http://localhost:3002/deleteGame/${delID}`;
+
+            fetch(deleteApiEndpoint, {
+                method: 'DELETE', // HTTP DELETE request
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(result => {
+                // Handle the success response
+                console.log("Success:", result);
+                window.location.href = "/admin"
+            })
+            .catch(error => {
+                // Handle errors
+                console.error("Error:", error);
+                alert("Failed to delete game. Please try again.");
+            });
+        })
+    </script>
+
+    <!-- User Data Script -->
+    <script>
+        const delButton = document.getElementById("delbutton");
+        const adminApiEndpoint = "http://localhost:3002/me";
+
+        fetch(adminApiEndpoint, {
+            method: 'GET', // HTTP GET request
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(result => {
+            // Handle the success response
+            console.log("Success:", result);
+
+            // Delete button display
+            if(result.is_admin == true){
+                delButton.style.display = "block";
+            }
+            else{
+                delButton.style.display = "none";
+            }
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error:", error);
+            alert("Failed to admin datas. Please Refresh.");
+        });
+    </script>
 
     <!-- Back Button Script -->
     <script>

@@ -26,6 +26,15 @@ h1{
     font-size: min(1.25rem, 2.8vw);
 }
 
+#delbutton{
+    font-family: 'Poppins';
+    font-weight: 700;
+    max-width: 200px;
+    background-color: #E53E8F;
+    color: white;
+    font-size: min(1.25rem, 2.8vw);
+}
+
 img{
     border: 3px solid #ffffff;
     border-radius: 20px;
