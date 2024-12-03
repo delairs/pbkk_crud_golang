@@ -118,6 +118,23 @@ func DeleteGame(c *gin.Context) {
 		return
 	}
 
+	filename := game.Path_Image
+
+	// Construct the file path (adjust based on your folder structure)
+	filePath := fmt.Sprintf("./asset/%s", filename)
+
+	// Check if the file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "File not found"})
+		return
+	}
+
+	// Delete the file
+	if err := os.Remove(filePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete file", "details": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "Game deleted successfully"})
 }
 
