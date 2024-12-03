@@ -70,6 +70,36 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
 
+    <!-- Play Button Script -->
+    <script>
+        document.getElementById("button").addEventListener('click', () => {
+            const histID     = urlParams.get('gameID');
+            historyApiEndpoint = `http://localhost:3002/addHistory/${histID}`;
+
+            fetch(historyApiEndpoint, {
+                method: 'POST', // HTTP POST request
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(result => {
+                // Handle the success response
+                console.log("Success:", result);
+            })
+            .catch(error => {
+                // Handle errors
+                console.error("Error:", error);
+                alert("Failed to add history. Please try again.");
+            });
+        })
+    </script>
+
     <!-- Delete Button Script -->
     <script>
         document.getElementById("delbutton").addEventListener('click', () => {

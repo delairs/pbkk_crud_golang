@@ -26,13 +26,6 @@ func AddHistory(c *gin.Context) {
 		return
 	}
 
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token required"})
-		c.Abort()
-		return
-	}
-
 	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
 	userID, exists := c.Get("user_id")
 	if !exists {
