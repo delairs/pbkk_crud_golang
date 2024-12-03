@@ -24,7 +24,7 @@
                 <div id="form">
                     <div class="mb-3">
                         <label for="gameTitle" class="form-label" style="color: #F5C336;">Game Title</label>
-                        <input id="input" type="text" class="form-control bg-primary text-light" id="gameTitle" placeholder="Max 20 characters." style="border: 2.5px solid #F5C336; font-family:'Poppins';">
+                        <input type="text" class="form-control bg-primary text-light" id="gameTitle" placeholder="Max 20 characters." style="border: 2.5px solid #F5C336; font-family:'Poppins';">
                       </div>
                       <div class="mb-3">
                         <label for="gameDesc" class="form-label" style="color: #F5C336;" >Game Description</label>
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <button id="button" type="button" class="btn btn-lg mb-4">Add Game</button>
+                    <button id="addButton" type="button" class="btn btn-lg mb-4">Add Game</button>
                 </div>
             </div>
         </div>
@@ -50,5 +50,62 @@
     <!--javascript-->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
+
+    <!-- Add Game Script -->
+    <script>
+        document.getElementById('addButton').addEventListener('click', () => {
+            const input = document.getElementById('formFile');
+            const imageFile = input.files[0];
+
+            // Get the values from the input fields
+            const gameTitle = document.getElementById('gameTitle').value;
+            const gameDesc  = document.getElementById('gameDesc').value;
+            const linkEmbed = document.getElementById('linkEmbed').value;
+
+            // Check for empty fields
+            if (!gameTitle || !gameDesc || !linkEmbed) {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            if (!imageFile) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            // Data to send to the API
+            const formData = new FormData();
+            formData.append('file', imageFile);
+            formData.append('Game_Title', gameTitle);
+            formData.append('Description', gameDesc);
+            formData.append('Link_Embed', linkEmbed);
+
+            // API endpoint (adjust to match your Gin server's address)
+            const apiEndpoint = "http://localhost:3002/addGameAPI";
+
+            // Send the data using fetch
+            fetch(apiEndpoint, {
+                method: 'POST', // HTTP POST request
+                body: formData // Send form data
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(result => {
+                // Handle the success response
+                console.log("Success:", result);
+                
+                window.location.href = "/admin";
+            })
+            .catch(error => {
+                // Handle errors
+                console.error("Error:", error);
+                alert("Failed to upload. Please try again.");
+            });
+        });
+    </script>
 </body>
 </html>

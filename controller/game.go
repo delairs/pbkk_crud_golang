@@ -3,7 +3,10 @@ package controller
 import (
 	"crud-go/database"
 	"crud-go/models"
+	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +15,7 @@ func AddGame(c *gin.Context) {
 
 	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
 	userID, exists := c.Get("user_id")
-	if !exists {
+	if !exists || userID == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User didn't exists"})
 		return
 	}
@@ -25,38 +28,44 @@ func AddGame(c *gin.Context) {
 		return
 	}
 
-	var input struct {
-		Game_Title  string `json:"game_title"`
-		Description string `json:"description"`
-		Link_Embed  string `json:"link_embed"`
-		Path_Image  string `json:"path_image"`
-	}
+	// Retrieve form data
+	gameTitle := c.PostForm("Game_Title")
+	description := c.PostForm("Description")
+	linkEmbed := c.PostForm("Link_Embed")
 
-	// Validasi input
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Get the file from the form
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "Failed to get file",
+		})
 		return
 	}
 
-	// Cari user berdasarkan userID
-	var user models.User
-	if err := database.DB.First(&user, "id = ?", userID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+	// Define the destination directory (asset folder)
+	assetDir := "./asset"
+	// Ensure the asset folder exists
+	if _, err := os.Stat(assetDir); os.IsNotExist(err) {
+		os.Mkdir(assetDir, os.ModePerm)
+	}
+
+	// Define the path where the file will be saved
+	filePath := filepath.Join(assetDir, file.Filename)
+
+	// Save the uploaded file to the asset folder
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(500, gin.H{
+			"message": "Failed to save file",
+		})
 		return
 	}
 
-	// Periksa apakah user adalah admin
-	if !user.IsAdmin {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied, admin only"})
-		return
-	}
-
-	// Simpan user ke database
+	// Simpan game ke database
 	game := models.Game{
-		Game_Title:  input.Game_Title,
-		Description: input.Description,
-		Link_Embed:  input.Link_Embed,
-		Path_Image:  input.Path_Image,
+		Game_Title:  gameTitle,
+		Description: description,
+		Link_Embed:  linkEmbed,
+		Path_Image:  file.Filename,
 	}
 
 	// Add Game
@@ -65,7 +74,11 @@ func AddGame(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Game added successfully"})
+	c.JSON(http.StatusOK, gin.H{
+		"message":    "Game added successfully",
+		"filestatus": fmt.Sprintf("File %s uploaded successfully!", file.Filename),
+		"file":       filePath,
+	})
 }
 
 func DeleteGame(c *gin.Context) {
