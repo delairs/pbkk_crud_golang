@@ -33,4 +33,5 @@ func InitRoute(app *gin.Engine) {
 	authorized.GET("/game", controller.GameDescPage())
 	authorized.GET("/admin", controller.IndexAdmin())
 	authorized.GET("/addGame", controller.AddGamePage())
+	authorized.GET("/profile", controller.ProfilePage())
 }

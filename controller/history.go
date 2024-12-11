@@ -46,7 +46,7 @@ func AddHistory(c *gin.Context) {
 		Game_ID: uint(gameIDInt),
 	}
 
-	// Add Game
+	// Add History
 	if err := database.DB.Create(&history).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add history"})
 		return
@@ -56,13 +56,6 @@ func AddHistory(c *gin.Context) {
 }
 
 func GetHistory(c *gin.Context) {
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token required"})
-		c.Abort()
-		return
-	}
-
 	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
 	userID, exists := c.Get("user_id")
 	if !exists {
