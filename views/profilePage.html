@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Days+One&family=Outfit&family=Poppins&family=REM&family=Rasa&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit&family=Poppins&family=REM&family=Rasa&display=swap" rel="stylesheet">
-    <title>Arcade Tamaka</title>
+    <title>Profile Page</title>
 </head>
 <body class="mt-3 pt-2 container-fluid">
     <div class="row mb-3 mb-sm-0">
-        <a href="/home" id="backButton" class="col-3 col-lg-2 text-center">
+        <a href="/home" class="col-3 col-lg-2 text-center">
             <i class="bi bi-arrow-left-circle" style="font-size: 50px"></i>
         </a>
     </div>
@@ -23,9 +23,12 @@
         </div>
         <div>
             <span id="username" class="fs-2 d-none d-sm-inline">
-                <!-- Username will be from script -->
+                <!-- username generated through script -->
             </span>
-            <a href="/editusername" class="ms-2"><i class="bi bi-pencil fs-5"></i></a>
+            <a href="#" id="editUsername" class="ms-2"><i class="bi bi-pencil fs-5"></i></a>
+        </div>
+        <div>
+            <input type="text" id="inputUsername" class="form-control" style="display: none;" placeholder="Enter new username">
         </div>
         <button type="button" class="btn btn-primary mt-3" style="background-color: #F5C336;" data-bs-toggle="modal" data-bs-target="#gameHistoryModal">
             View Game History
@@ -56,7 +59,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="lib/js/bootstrap.bundle.js"></script>
 
-    <!-- Register Script -->
     <!-- User Data Script -->
     <script>
         const userApiEndpoint = "http://localhost:3002/me";
@@ -129,6 +131,55 @@
             // Handle errors
             console.error("Error:", error);
             alert("Failed to get game histories. Please Refresh.");
+        });
+    </script>
+
+    <!-- Edit Username Script -->
+    <script>
+        document.getElementById('editUsername').addEventListener('click', function() {
+            const inputContainer = document.getElementById('inputUsername');
+
+            if(inputContainer.style.display == 'block'){
+                inputContainer.style.display = 'none';
+                return;
+            }
+
+            inputContainer.style.display = 'block';
+        });
+
+        document.getElementById('inputUsername').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter'){
+                const newUsername = document.getElementById('inputUsername').value;
+                const userApiEndpoint = "http://localhost:3002/editProfile";
+
+                fetch(userApiEndpoint, {
+                    method: 'PUT', // HTTP PUT request
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: newUsername
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(result => {
+                    // Handle the success response
+                    console.log("Success:", result);
+                    document.getElementById('username').innerText = newUsername;
+                    document.getElementById('inputUsername').value = "";
+                    document.getElementById('inputUsername').style.display = 'none';
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error("Error:", error);
+                    alert("Failed to update username. Please Refresh.");
+                });
+            }
         });
     </script>
 </body>

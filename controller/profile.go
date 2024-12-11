@@ -2,7 +2,6 @@ package controller
 
 import (
 	"crud-go/database"
-	"crud-go/helpers"
 	"crud-go/models"
 	"net/http"
 
@@ -10,13 +9,6 @@ import (
 )
 
 func EditProfile(c *gin.Context) {
-
-	tokenString := c.GetHeader("Authorization")
-	if tokenString == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization token required"})
-		c.Abort()
-		return
-	}
 
 	// Ambil user ID dari context yang telah di-set oleh middleware AuthMiddleware
 	userID, exists := c.Get("user_id")
@@ -26,9 +18,7 @@ func EditProfile(c *gin.Context) {
 	}
 
 	var input struct {
-		Name     string `json:"name"`
-		Email    string `json:"email" binding:"email"`
-		Password string `json:"password"`
+		Name string `json:"name"`
 	}
 
 	// Validasi input
@@ -47,22 +37,6 @@ func EditProfile(c *gin.Context) {
 	// Perbarui data user
 	if input.Name != "" {
 		user.Name = input.Name
-	}
-	if input.Email != "" && input.Email != user.Email {
-		var existingUser models.User
-		if err := database.DB.Where("email = ?", input.Email).First(&existingUser).Error; err == nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
-			return
-		}
-		user.Email = input.Email
-	}
-	if input.Password != "" {
-		hashedPassword, err := helpers.HashPassword(input.Password)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-			return
-		}
-		user.Password = hashedPassword
 	}
 
 	// Simpan perubahan ke database
