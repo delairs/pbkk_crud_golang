@@ -42,8 +42,8 @@ func AddHistory(c *gin.Context) {
 
 	// Simpan user ke database
 	history := models.History{
-		User_ID: userID.(uint),
-		Game_ID: uint(gameIDInt),
+		UserID: userID.(uint),
+		GameID: uint(gameIDInt),
 	}
 
 	// Add History

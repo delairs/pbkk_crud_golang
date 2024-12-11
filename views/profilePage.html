@@ -13,7 +13,7 @@
 </head>
 <body class="mt-3 pt-2 container-fluid">
     <div class="row mb-3 mb-sm-0">
-        <a href="/home" class="col-3 col-lg-2 text-center">
+        <a href="/home" id="backButton" class="col-3 col-lg-2 text-center">
             <i class="bi bi-arrow-left-circle" style="font-size: 50px"></i>
         </a>
     </div>
@@ -82,8 +82,7 @@
             username.innerText = result.name;
 
             if(result.is_admin == true){
-                backButton = document.getElementById("backButton");
-                backButton.href = "/admin";
+                document.getElementById("backButton").href = "/admin";
             }
 
         })
@@ -115,16 +114,25 @@
         .then(result => {
             // Handle the success response
             console.log("Success:", result);
+
+            // Set to keep track of unique game titles
+            const gameTitles = new Set();
+
             result.histories.forEach(history => {
                 // Handle the empty game title
                 if(history.Game.Game_Title == ""){
                     return;
                 }
 
-                const li = document.createElement("li");
-                li.classList.add("list-group-item");
-                li.innerText = `${history.Game.Game_Title}`;
-                gameHistoryList.appendChild(li);
+                // Check if the game title is already in the set
+                if (!gameTitles.has(history.Game.Game_Title)) {
+                    gameTitles.add(history.Game.Game_Title); // Add the game title to the set
+
+                    const li = document.createElement("li");
+                    li.classList.add("list-group-item");
+                    li.innerText = `${history.Game.Game_Title}`;
+                    gameHistoryList.appendChild(li);
+                }
             });
         })
         .catch(error => {
